@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -28,6 +30,8 @@ public class Transfer {
     private String title;
     private BigDecimal value;
     private Integer recipientId;
+    private LocalDate date;
+    private LocalTime time;
     private boolean successful;
 
     @ManyToOne

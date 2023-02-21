@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -39,6 +41,8 @@ public class TransferController {
         User currentUser = userService.getCurrentUser(email);
         currentUser.getTransfers().add(transfer);
         transfer.setUser(currentUser);
+        transfer.setDate(LocalDate.now());
+        transfer.setTime(LocalTime.now());
         transferService.saveTransfer(transfer);
         return ResponseEntity.ok().build();
     }
@@ -58,7 +62,6 @@ public class TransferController {
         String email = jwtService.extractUsername(token);
         User currentUser = userService.getCurrentUser(email);
         List<Transfer> transfers = transferService.getCurrentUserIncomeTransfers(currentUser.getId());
-        transfers.removeIf(transfer -> !transfer.isSuccessful());
         return ResponseEntity.ok(transferMapper.mapListToIncomeDto(transfers));
     }
 }

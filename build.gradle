@@ -37,6 +37,12 @@ dependencies {
 	//DB
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.32'
 
+	//mail sender
+	implementation group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
+	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+
+
 }
 
 tasks.named('test') {

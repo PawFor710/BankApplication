@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -14,6 +15,8 @@ import java.math.BigDecimal;
 public class IncomeTransferDto {
 
     private String title;
-    private BigDecimal value;
+    private String value;
     private Integer senderId;
+    private LocalDate date;
+    private LocalTime time;
 }

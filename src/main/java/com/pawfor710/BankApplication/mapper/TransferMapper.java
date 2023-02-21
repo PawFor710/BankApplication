@@ -14,8 +14,10 @@ public class TransferMapper {
     public TransferDto mapToDto(Transfer transfer) {
         return TransferDto.builder()
                 .title(transfer.getTitle())
-                .value(transfer.getValue())
+                .value(String.valueOf(transfer.getValue()) + " PLN")
                 .recipientId(transfer.getRecipientId())
+                .date(transfer.getDate())
+                .time(transfer.getTime())
                 .successful(transfer.isSuccessful())
                 .build();
     }
@@ -29,8 +31,10 @@ public class TransferMapper {
     public IncomeTransferDto mapToIncomeDto(Transfer transfer) {
         return IncomeTransferDto.builder()
                 .title(transfer.getTitle())
-                .value(transfer.getValue())
+                .value(String.valueOf(transfer.getValue()) + " PLN")
                 .senderId(transfer.getUser().getId())
+                .date(transfer.getDate())
+                .time(transfer.getTime())
                 .build();
     }
 

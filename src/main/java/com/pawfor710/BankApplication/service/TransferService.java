@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -20,6 +19,7 @@ public class TransferService {
 
     private final TransferRepository transferRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     public void saveTransfer(Transfer transfer) throws Exception {
         User sender = userRepository.findById(transfer.getUser().getId())
@@ -30,9 +30,12 @@ public class TransferService {
             sender.setBalance(sender.getBalance().subtract(transfer.getValue()));
             recipient.setBalance(recipient.getBalance().add(transfer.getValue()));
             transfer.setSuccessful(true);
+            emailService.sendMailToSenderWhenTransferSuccess(transfer);
+            emailService.sendMailToRecipientWhenTransferSuccess(transfer);
             transferRepository.save(transfer);
         } else {
             transfer.setSuccessful(false);
+            emailService.sendMailToSenderWhenTransferFailed(transfer);
             throw new NoMoneyException();
         }
     }
@@ -42,6 +45,8 @@ public class TransferService {
     }
 
     public List<Transfer> getCurrentUserIncomeTransfers(Integer recipientId) {
-        return transferRepository.findAllByRecipientId(recipientId);
+        List<Transfer> transfers = transferRepository.findAllByRecipientId(recipientId);
+        transfers.removeIf(transfer -> !transfer.isSuccessful());
+        return transfers;
     }
 }
