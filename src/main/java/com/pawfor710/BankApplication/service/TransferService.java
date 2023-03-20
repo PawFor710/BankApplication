@@ -14,13 +14,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TransferService {
 
     private final TransferRepository transferRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
 
+    @Transactional
     public void saveTransfer(Transfer transfer) throws Exception {
         User sender = userRepository.findById(transfer.getUser().getId())
                 .orElseThrow();
@@ -36,8 +36,10 @@ public class TransferService {
         } else {
             transfer.setSuccessful(false);
             emailService.sendMailToSenderWhenTransferFailed(transfer);
+            transferRepository.save(transfer);
             throw new NoMoneyException();
         }
+
     }
 
     public List<Transfer> getCurrentUserTransfers(Integer userId) {

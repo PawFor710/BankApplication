@@ -16,6 +16,4 @@ class AuthenticationServiceTest {
     void test() {
         System.out.println(authenticationService.createAccountNumber());
     }
-
-
 }

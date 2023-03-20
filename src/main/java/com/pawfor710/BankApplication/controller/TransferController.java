@@ -29,16 +29,13 @@ import java.util.List;
 public class TransferController {
 
     private final TransferService transferService;
-    private final JwtService jwtService;
     private final UserService userService;
     private final TransferMapper transferMapper;
 
     @PostMapping
     public ResponseEntity<Void> makeTransfer(@RequestHeader HttpHeaders headers,
                                              @RequestBody Transfer transfer) throws Exception {
-        String token = headers.getFirst(HttpHeaders.AUTHORIZATION).substring(7);
-        String email = jwtService.extractUsername(token);
-        User currentUser = userService.getCurrentUser(email);
+        User currentUser = userService.getCurrentUser(headers);
         currentUser.getTransfers().add(transfer);
         transfer.setUser(currentUser);
         transfer.setDate(LocalDate.now());
@@ -49,18 +46,14 @@ public class TransferController {
 
     @GetMapping("/sent")
     public ResponseEntity<List<TransferDto>> getCurrentUserTransfers(@RequestHeader HttpHeaders headers) {
-        String token = headers.getFirst(HttpHeaders.AUTHORIZATION).substring(7);
-        String email = jwtService.extractUsername(token);
-        User currentUser = userService.getCurrentUser(email);
+        User currentUser = userService.getCurrentUser(headers);
         List<Transfer> transfers = transferService.getCurrentUserTransfers(currentUser.getId());
         return ResponseEntity.ok(transferMapper.mapListToDto(transfers));
     }
 
     @GetMapping("/incomes")
     public ResponseEntity<List<IncomeTransferDto>> getCurrentUserIncomeTransfers(@RequestHeader HttpHeaders headers) {
-        String token = headers.getFirst(HttpHeaders.AUTHORIZATION).substring(7);
-        String email = jwtService.extractUsername(token);
-        User currentUser = userService.getCurrentUser(email);
+        User currentUser = userService.getCurrentUser(headers);
         List<Transfer> transfers = transferService.getCurrentUserIncomeTransfers(currentUser.getId());
         return ResponseEntity.ok(transferMapper.mapListToIncomeDto(transfers));
     }

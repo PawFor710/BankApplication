@@ -20,13 +20,10 @@ public class UserController {
 
     private final UserMapper userMapper;
     private final UserService userService;
-    private final JwtService jwtService;
 
     @GetMapping("/current")
     public ResponseEntity<UserDto> getCurrentUser(@RequestHeader HttpHeaders headers) {
-        String token = headers.getFirst(HttpHeaders.AUTHORIZATION).substring(7);
-        String email = jwtService.extractUsername(token);
-        User currentUser = userService.getCurrentUser(email);
+        User currentUser = userService.getCurrentUser(headers);
         return ResponseEntity.ok(userMapper.mapToDto(currentUser));
     }
 
